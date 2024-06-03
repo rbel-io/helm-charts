@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana-prd
+spec:
+  project: default
+  sources:
+    - repoURL: 'https://github.com/rbel-io/helm-charts'
+      targetRevision: HEAD
+      path: charts/grafana
+      helm:
+        valueFiles:
+        - $values/grafana/prd/values.yaml
+    - repoURL: 'https://github.com/rbel-io/helm-values.git'
+      targetRevision: HEAD
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: grafana-prd
+  syncPolicy:
+    automated:
+      prune: true
